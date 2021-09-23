@@ -1,4 +1,4 @@
-module GoTool
+module github.com/zasray/GoTool
 
 go 1.17
 
