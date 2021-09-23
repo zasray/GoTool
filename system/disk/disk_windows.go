@@ -5,7 +5,6 @@ package disk
 
 import (
 	"fmt"
-	"github.com/StackExchange/wmi"
 	"regexp"
 	"strings"
 )
@@ -64,6 +63,7 @@ func (e *DiskToolImpl) GetDiskList() []DiskInfo {
 			Size:         float64(win32DiskDrive.Size / 1024.0 / 1024.0), //MB
 			Children:     make([]DiskChildren, 0),
 			SSD:          strings.Contains(strings.ToLower(win32DiskDrive.Model), strings.ToLower("NVMe")),
+			System:       false,
 		}
 		//寻找分区信息
 		for _, win32LogicalDiskToPartition := range win32LogicalDiskToPartitions {
@@ -79,6 +79,10 @@ func (e *DiskToolImpl) GetDiskList() []DiskInfo {
 				// 获取分区子盘的数据
 				for _, storageInfo := range storageInfos {
 					if storageInfo.Name == matchSubString[1] {
+						if strings.Contains(strings.ToLower(storageInfo.Name), "c:") {
+							// 系统盘
+							diskInfo.System = true
+						}
 						size = float64(storageInfo.Size / 1024 / 1024)
 						freeSize = float64(storageInfo.FreeSpace / 1024 / 1024)
 					}

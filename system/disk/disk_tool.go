@@ -6,6 +6,8 @@ type DiskInfo struct {
 	Model string `json:"model"`
 	// 是否是ssd
 	SSD bool `json:"ssd"`
+	// 是否是系统盘，根据当前的理解，windows下含有C盘的硬盘是系统盘、linux下含有/boot的硬盘是系统盘
+	System bool `json:"system"`
 	// 序列号(硬盘的唯一判断标准）
 	SerialNumber string `json:"serial_number"`
 	// 大小 MB

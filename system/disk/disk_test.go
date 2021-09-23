@@ -1,6 +1,8 @@
 package disk
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"testing"
 )
@@ -13,6 +15,10 @@ func TestFindDiskInfo(t *testing.T) {
 	} else {
 		fmt.Println("成功了")
 		fmt.Printf("%d個硬盤：%v\n", len(diskList), diskList)
-		t.Logf("获取硬盘成功，硬盘数为%d，总共：%v", len(diskList), diskList)
+		s, _ := json.Marshal(diskList)
+		var out bytes.Buffer
+		json.Indent(&out, s, "", "    ")
+		fmt.Println(out.String())
+		t.Logf("获取硬盘成功，硬盘数为%d，Json：%s", len(diskList), out.String())
 	}
 }
