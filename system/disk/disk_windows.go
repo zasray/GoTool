@@ -76,7 +76,8 @@ func (e *DiskToolImpl) GetDiskList() []DiskInfo {
 			if matched {
 				matchSubString := reg.FindStringSubmatch(*win32LogicalDiskToPartition.Dependent)
 				size := float64(0)
-				freeSize := float64(0)
+				usedSpace := float64(0)
+				freeSpace := float64(0)
 				// 获取分区子盘的数据
 				for _, storageInfo := range storageInfos {
 					if storageInfo.Name == matchSubString[1] {
@@ -85,13 +86,15 @@ func (e *DiskToolImpl) GetDiskList() []DiskInfo {
 							diskInfo.System = true
 						}
 						size = float64(storageInfo.Size / 1024 / 1024)
-						freeSize = float64(storageInfo.FreeSpace / 1024 / 1024)
+						freeSpace = float64(storageInfo.FreeSpace / 1024 / 1024)
+						usedSpace = size - freeSpace
 					}
 				}
 				diskInfo.Children = append(diskInfo.Children, DiskChildren{
 					Path: matchSubString[1],
 					Size: size,
-					Free: freeSize,
+					Used: usedSpace,
+					Free: freeSpace,
 				})
 			}
 		}

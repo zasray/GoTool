@@ -22,6 +22,8 @@ type DiskChildren struct {
 	Path string `json:"path"`
 	// 大小 MB
 	Size float64 `json:"size"`
+	// 已用空间
+	Used float64 `json:"used"`
 	// 剩余空间
 	Free float64 `json:"free"`
 }

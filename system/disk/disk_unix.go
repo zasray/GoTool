@@ -5,10 +5,13 @@ package disk
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/shirou/gopsutil/disk"
 	"github.com/zasray/GoTool/convert/unit"
 	"io/ioutil"
 	"log"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -66,8 +69,20 @@ func (e *DiskToolImpl) GetDiskList() []DiskInfo {
 				if strings.Contains(strings.ToLower(diskChildren.Path), "/boot") {
 					diskInfo.System = true
 				}
-				diskChildren.Size = float64(convertStorageUnit.StringToInt(unit.DEFAULT, unit.MB, childPath.Size))
-				diskChildren.Free = 0
+
+				if len(diskChildren.Path) > 0 {
+					diskDetail, err := disk.Usage(diskChildren.Path)
+					if err == nil {
+						diskDetail.UsedPercent, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", diskDetail.UsedPercent), 64)
+						diskChildren.Size = float64(diskDetail.Total / 1024 / 1024)
+						diskChildren.Used = float64(diskDetail.Used / 1024 / 1024)
+						diskChildren.Free = float64(diskDetail.Free / 1024 / 1024)
+					}
+				} else {
+					diskChildren.Size = float64(convertStorageUnit.StringToInt(unit.DEFAULT, unit.MB, childPath.Size))
+					diskChildren.Used = 0
+					diskChildren.Free = 0
+				}
 				diskInfo.Children = append(diskInfo.Children, diskChildren)
 			}
 		}
