@@ -59,11 +59,11 @@ func (e *DiskToolImpl) GetDiskList() []DiskInfo {
 	ret := make([]DiskInfo, 0)
 	for _, win32DiskDrive := range win32DiskDrives {
 		diskInfo := DiskInfo{
-			Model:        win32DiskDrive.Model,
-			SerialNumber: win32DiskDrive.SerialNumber,
+			Model:        strings.TrimSpace(win32DiskDrive.Model),
+			SerialNumber: strings.TrimSpace(win32DiskDrive.SerialNumber),
 			Size:         float64(win32DiskDrive.Size / 1024.0 / 1024.0), //MB
 			Children:     make([]DiskChildren, 0),
-			SSD:          strings.Contains(strings.ToLower(win32DiskDrive.Model), strings.ToLower("NVMe")),
+			SSD:          strings.Contains(strings.ToLower(win32DiskDrive.Model), strings.ToLower("NVMe")) || strings.Contains(strings.ToLower(win32DiskDrive.Model), strings.ToLower("SSD")),
 			System:       false,
 		}
 		//寻找分区信息
