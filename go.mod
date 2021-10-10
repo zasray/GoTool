@@ -9,5 +9,5 @@ require (
 
 require (
 	github.com/go-ole/go-ole v1.2.5 // indirect
-	golang.org/x/sys v0.0.0-20190916202348-b4ddaad3f8a3 // indirect
+	golang.org/x/sys v0.0.0-20211007075335-d3039528d8ac // indirect
 )

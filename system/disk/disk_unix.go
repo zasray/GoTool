@@ -19,17 +19,19 @@ type LsblkRet struct {
 	Blockdevices []Blockdevices `json:"blockdevices"`
 }
 type Blockdevices struct {
-	Name       string         `json:"name"`
-	Kname      string         `json:"kname"`
-	Path       string         `json:"path"`
-	Mountpoint string         `json:"mountpoint"`
-	Label      string         `json:"label"`
-	UUID       string         `json:"uuid"`
-	Model      string         `json:"model"`
-	Serial     string         `json:"serial"`
-	Size       string         `json:"size"`
-	Rota       string         `json:"rota"` //是否可旋转，判断ssd和hdd的关键指标
-	Children   []Blockdevices `json:"children,omitempty"`
+	Name       string `json:"name"`
+	Kname      string `json:"kname"`
+	Path       string `json:"path"`
+	Mountpoint string `json:"mountpoint"`
+	Label      string `json:"label"`
+	UUID       string `json:"uuid"`
+	// 类型
+	Type     string         `json:"type"`
+	Model    string         `json:"model"`
+	Serial   string         `json:"serial"`
+	Size     string         `json:"size"`
+	Rota     interface{}    `json:"rota"` //是否可旋转，判断ssd和hdd的关键指标
+	Children []Blockdevices `json:"children,omitempty"`
 }
 
 type DiskToolImpl struct {
@@ -55,11 +57,27 @@ func (e *DiskToolImpl) GetDiskList() []DiskInfo {
 	err = json.Unmarshal(opBytes, &lsblkRet)
 	ret := make([]DiskInfo, 0)
 	for _, blockDevice := range lsblkRet.Blockdevices {
+		isSSD := false
+		isSSDStr, ok := blockDevice.Rota.(string)
+		if ok {
+			isSSD = isSSDStr == "0"
+		} else {
+			isRota, ok := blockDevice.Rota.(bool)
+			if ok {
+				isSSD = !isRota
+			} else {
+				panic("cannot get disk rota val")
+			}
+		}
+		if strings.ToLower(blockDevice.Type) != "disk" {
+			// 不是disk就跳过
+			continue
+		}
 		diskInfo := DiskInfo{}
 		diskInfo.Model = blockDevice.Model
 		diskInfo.SerialNumber = blockDevice.Serial
 		diskInfo.Size = float64(convertStorageUnit.StringToInt(unit.DEFAULT, unit.MB, blockDevice.Size))
-		diskInfo.SSD = blockDevice.Rota == "0"
+		diskInfo.SSD = isSSD
 		diskInfo.System = false
 		diskInfo.Children = make([]DiskChildren, 0)
 		if len(blockDevice.Children) > 0 {
