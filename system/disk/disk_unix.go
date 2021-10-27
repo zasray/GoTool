@@ -30,6 +30,7 @@ type Blockdevices struct {
 	Model    string         `json:"model"`
 	Serial   string         `json:"serial"`
 	Size     string         `json:"size"`
+	Free     string         `json:"fsavail"`
 	Rota     interface{}    `json:"rota"` //是否可旋转，判断ssd和hdd的关键指标
 	Children []Blockdevices `json:"children,omitempty"`
 }
@@ -77,6 +78,7 @@ func (e *DiskToolImpl) GetDiskList() []DiskInfo {
 		diskInfo.Model = blockDevice.Model
 		diskInfo.SerialNumber = blockDevice.Serial
 		diskInfo.Size = float64(convertStorageUnit.StringToInt(unit.DEFAULT, unit.MB, blockDevice.Size))
+		diskInfo.Free = float64(convertStorageUnit.StringToInt(unit.DEFAULT, unit.MB, blockDevice.Free))
 		diskInfo.SSD = isSSD
 		diskInfo.System = false
 		diskInfo.Children = make([]DiskChildren, 0)

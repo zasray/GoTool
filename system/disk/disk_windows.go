@@ -5,7 +5,6 @@ package disk
 
 import (
 	"fmt"
-	"github.com/StackExchange/wmi"
 	"regexp"
 	"strings"
 )
@@ -62,6 +61,7 @@ func (e *DiskToolImpl) GetDiskList() []DiskInfo {
 			Model:        strings.TrimSpace(win32DiskDrive.Model),
 			SerialNumber: strings.TrimSpace(win32DiskDrive.SerialNumber),
 			Size:         float64(win32DiskDrive.Size / 1024.0 / 1024.0), //MB
+			Free:         0,                                              //MB
 			Children:     make([]DiskChildren, 0),
 			SSD:          strings.Contains(strings.ToLower(win32DiskDrive.Model), strings.ToLower("NVMe")) || strings.Contains(strings.ToLower(win32DiskDrive.Model), strings.ToLower("SSD")),
 			System:       false,

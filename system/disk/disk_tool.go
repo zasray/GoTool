@@ -12,6 +12,8 @@ type DiskInfo struct {
 	SerialNumber string `json:"serial_number"`
 	// 大小 MB
 	Size float64 `json:"size"`
+	// 剩余空间
+	Free float64 `json:"size"`
 	// 分区（路径）
 	Children []DiskChildren `json:"children"`
 }
