@@ -13,7 +13,7 @@ type DiskInfo struct {
 	// 大小 MB
 	Size float64 `json:"size"`
 	// 剩余空间
-	Free float64 `json:"size"`
+	Free float64 `json:"free"`
 	// 分区（路径）
 	Children []DiskChildren `json:"children"`
 }
