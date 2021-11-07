@@ -29,7 +29,7 @@ type Blockdevices struct {
 	Type     string         `json:"type"`
 	Model    string         `json:"model"`
 	Serial   string         `json:"serial"`
-	Size     string         `json:"size"`
+	Size     string         `json:"fssize"`
 	Free     string         `json:"fsavail"`
 	Rota     interface{}    `json:"rota"` //是否可旋转，判断ssd和hdd的关键指标
 	Children []Blockdevices `json:"children,omitempty"`
