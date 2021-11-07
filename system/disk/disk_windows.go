@@ -5,6 +5,7 @@ package disk
 
 import (
 	"fmt"
+	"github.com/StackExchange/wmi"
 	"regexp"
 	"strings"
 )
